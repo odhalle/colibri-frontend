@@ -10,30 +10,30 @@
                 <!-- Email -->
                 <v-text-field
                   label="Email"
-                  v-model="email"
-                  :rules="emailRules"
+                  v-model="host_email"
+                  :rules="host_email_rules"
                   required
                 ></v-text-field>
                 <!-- Name -->
                 <v-text-field
                   label="Nom"
-                  v-model="last_name"
-                  :rules="last_name_rules"
+                  v-model="host_last_name"
+                  :rules="host_last_name_rules"
                   :counter="40"
                   required
                 ></v-text-field>
                 <!-- First name -->
                 <v-text-field
                   label="Prénom"
-                  v-model="first_name"
-                  :rules="first_name_rules"
+                  v-model="host_first_name"
+                  :rules="host_first_name_rules"
                   :counter="20"
                   required
                 ></v-text-field>
                 <!-- Number of guests -->
                 <v-select
                   label="Nombre d'invités"
-                  v-model="nb_of_guests"
+                  v-model="number_of_guests"
                   :items="items"
                   :rules="[v => !!v || 'Number of guests is required']"
                   required
@@ -98,24 +98,24 @@ import axios from 'axios'
 export default {
   data: () => ({
     valid: true,
-    last_name: '',
-    last_name_rules: [
+    host_last_name: '',
+    host_last_name_rules: [
       v => !!v || 'Name is required',
       v => (v && v.length <= 40) || 'Name must be less than 40 characters'
     ],
-    first_name: '',
-    first_name_rules: [
+    host_first_name: '',
+    host_first_name_rules: [
       v => !!v || 'First name is required',
       v => (v && v.length <= 20) || 'First name must be less than 20 characters'
     ],
-    email: '',
-    emailRules: [
+    host_email: '',
+    host_email_rules: [
       v => !!v || 'E-mail is required',
       v =>
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
         'E-mail must be valid'
     ],
-    nb_of_guests: null,
+    number_of_guests: null,
     items: [
       '1',
       '2',
@@ -149,10 +149,11 @@ export default {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
         axios.post('http://localhost:8080/relays/', {
-          email: this.email,
-          last_name: this.last_name,
-          first_name: this.first_name,
-          nb_of_guests: this.nb_of_guests,
+          host_email: this.host_email,
+          host_last_name: this.host_last_name,
+          host_first_name: this.host_first_name,
+          number_of_guests: this.number_of_guests,
+          // TODO
           guests_first_names: ['TODO1', 'TODO2'],
           date: this.date,
           remark: this.remark
