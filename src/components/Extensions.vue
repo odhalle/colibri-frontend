@@ -7,9 +7,10 @@
   >
   <!-- {"guests_first_names":[],"nb_of_guests":4,"date":"2018-03-20T00:00:00.000Z","remark":"hfsgqfsq","__v":0}, -->
     <template slot="items" slot-scope="props">
+      <td>{{ props.item.host_email }}</td>
       <td>{{ props.item.host_last_name }}</td>
       <td>{{ props.item.host_first_name }}</td>
-      <td>{{ props.item.host_email }}</td>
+      <td>{{ props.item.host_phone_number }}</td>
       <td>{{ props.item.number_of_guests }}</td>
       <td>{{ props.item.guests_first_names }}</td>
       <td>{{ props.item.date }}</td>
@@ -25,15 +26,11 @@ export default {
   data () {
     return {
       headers: [
-        {
-          text: 'Nom',
-          align: 'left',
-          sortable: true,
-          value: 'host_last_name'
-        },
+        { text: 'Email', value: 'host_email', sortable: true },
+        { text: 'Nom', align: 'left', sortable: true, value: 'host_last_name' },
         { text: 'Prénom', value: 'host_first_name' },
-        { text: 'Email', value: 'host_email' },
-        { text: 'Nombre d\'invités', value: 'number_of_guests' },
+        { text: 'Numéro de téléphone', value: 'host_phone_number' },
+        { text: "Nombre d'invités", value: 'number_of_guests' },
         { text: 'Prénoms des invités', value: 'guests_first_names' },
         { text: 'Date', value: 'date' },
         { text: 'Remarque', value: 'remark' }
@@ -42,7 +39,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8080/relays/').then(response => {
+    axios.get('http://localhost:8080/extensions/').then(response => {
       this.items = response.data
     })
   }
