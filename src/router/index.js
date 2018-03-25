@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorldRoute from './helloworld'
 import CreateRelayRoute from './createrelay'
+import CreateExtensionRoute from './createextension'
+import CreateRideRoute from './createride'
 import AccomodationsRoute from './accomodations'
 import RidesRoute from './rides'
 import RelaysRoute from './relays'
@@ -16,6 +18,8 @@ export default new Router({
     RidesRoute,
     RelaysRoute,
     ExtensionsRoute,
-    CreateRelayRoute
+    CreateRelayRoute,
+    CreateExtensionRoute,
+    CreateRideRoute
   ]
 })
