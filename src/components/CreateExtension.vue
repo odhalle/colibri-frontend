@@ -1,62 +1,74 @@
 <template>
   <v-container fluid>
-    <v-slide-y-transition mode="out-in">
-      <v-layout column align-center>
-        <v-flex>
-          <v-card>
-            <v-card-text>
-              <v-form v-model="valid" ref="form" lazy-validation>
-                <v-text-field label="Email" v-model="host_email" :rules="host_email_rules" required></v-text-field>
-                <v-text-field label="Nom" v-model="host_last_name" :rules="host_last_name_rules" :counter="40" required></v-text-field>
-                <v-text-field label="Prénom" v-model="host_first_name" :rules="host_first_name_rules" :counter="20" required></v-text-field>
-                <v-text-field label="Numéro de téléphone" v-model="host_phone_number" :rules="host_phone_number_rules" :counter="20" required></v-text-field>
-                <v-select label="Nombre d'invités" v-model="number_of_guests" :items="items" :rules="[v => !!v || 'Number of guests is required']" required></v-select>
-                <!-- TODO guests_first_names -->
-                <v-menu
-                ref="menu"
-                lazy
-                :close-on-content-click="false"
-                v-model="menu"
-                transition="scale-transition"
-                offset-y
-                full-width
-                :nudge-right="40"
-                min-width="290px"
-                :return-value.sync="date"
-                >
-                <v-text-field
-                slot="activator"
-                label="Picker in menu"
-                v-model="date"
-                prepend-icon="event"
-                readonly
-                ></v-text-field>
-                <v-date-picker v-model="date" no-title scrollable>
-                  <v-spacer></v-spacer>
-                  <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                  <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                </v-date-picker>
-                </v-menu>
-                <!-- remark -->
-                <v-text-field v-model="remark" label="Vos remarques" multi-line :counter="150"></v-text-field>
-                <v-btn
-                  @click="submit"
-                  :disabled="!valid"
-                >
-                  submit
-                </v-btn>
-                <v-btn @click="clear">clear</v-btn>
-                
-              </v-form>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-slide-y-transition>
+    <v-layout column align-center>
+      <v-flex>
+        <v-card>
+          <v-card-text>
+            <v-form v-model="valid" ref="form" lazy-validation>
+              <v-text-field label="Email" prepend-icon="mail" v-model="host_email" :rules="host_email_rules" required></v-text-field>
+              <v-text-field label="Nom" v-model="host_last_name" :rules="host_last_name_rules" :counter="40" required></v-text-field>
+              <v-text-field label="Prénom" v-model="host_first_name" :rules="host_first_name_rules" :counter="20" required></v-text-field>
+              <v-text-field label="Numéro de téléphone" prepend-icon="phone" v-model="host_phone_number" :rules="host_phone_number_rules" required></v-text-field>
+              <v-select label="Nombre d'invités" v-model="number_of_guests" :items="items" :rules="[v => !!v || 'Number of guests is required']" required></v-select>
+              <v-select
+              label="Prénoms des invités"
+              chips
+              tags
+              prepend-icon="people"
+              append-icon=""
+              v-model="guests_first_names"
+              >
+                <template slot="selection" slot-scope="data">
+                  <v-chip
+                  close
+                  @input="remove(data.item)"
+                  :selected="data.selected"
+                  >
+                    {{ data.item }}
+                  </v-chip>
+                </template>
+              </v-select>
+              <v-menu
+              ref="menu"
+              lazy
+              :close-on-content-click="false"
+              v-model="menu"
+              transition="scale-transition"
+              offset-y
+              full-width
+              :nudge-right="40"
+              min-width="290px"
+              :return-value.sync="date"
+              >
+              <v-text-field
+              slot="activator"
+              label="Picker in menu"
+              v-model="date"
+              prepend-icon="event"
+              readonly
+              ></v-text-field>
+              <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+              </v-date-picker>
+              </v-menu>
+              <!-- remark -->
+              <v-text-field v-model="remark" label="Vos remarques" multi-line :rules="remark_rules" :counter="150"></v-text-field>
+              <v-btn
+                @click="submit"
+                :disabled="!valid"
+              >
+                submit
+              </v-btn>
+              <v-btn @click="clear">clear</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
-
-
 
 <script>
 import axios from 'axios'
@@ -106,10 +118,14 @@ export default {
       '19',
       '20'
     ],
+    guests_first_names: [],
     date: null,
     menu: false,
     modal: false,
-    remark: ''
+    remark: '',
+    remark_rules: [
+      v => (v.length <= 300) || 'Remark name must be less than 300 characters'
+    ]
   }),
 
   methods: {
@@ -130,6 +146,10 @@ export default {
     },
     clear () {
       this.$refs.form.reset()
+    },
+    remove (item) {
+      this.guests_first_names.splice(this.guests_first_names.indexOf(item), 1)
+      this.guests_first_names = [...this.guests_first_names]
     }
   }
 }
