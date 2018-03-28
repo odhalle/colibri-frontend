@@ -29,7 +29,7 @@
             full-width
             :nudge-right="40"
             min-width="290px"
-            :return-value.sync="date"
+            :return-value.sync="editedItem.date"
             >
             <v-text-field
             slot="activator"
@@ -115,6 +115,8 @@ export default {
   data () {
     return {
       dialog: false,
+      valid: true,
+      menu: false,
       search: '',
       headers: [
         { text: 'Nom', align: 'left', value: 'host_last_name' },
@@ -181,7 +183,9 @@ export default {
       ],
       host_last_name_rules: [],
       host_first_name_rules: [],
+      host_alias_rules: [],
       host_phone_number_rules: [],
+      host_address_street_rules: [],
       host_address_city_rules: [],
       host_address_number_rules: [],
       host_address_zip_code_rules: [],

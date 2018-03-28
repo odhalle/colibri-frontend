@@ -43,7 +43,7 @@
             full-width
             :nudge-right="40"
             min-width="290px"
-            :return-value.sync="date"
+            :return-value.sync="editedItem.date"
             >
               <v-text-field
               slot="activator"
@@ -55,7 +55,7 @@
               <v-date-picker v-model="editedItem.date" no-title scrollable>
                 <v-spacer></v-spacer>
                   <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                  <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                  <v-btn flat color="primary" @click="$refs.menu.save(editedItem.date)">OK</v-btn>
               </v-date-picker>
             </v-menu>
             <v-text-field v-model="editedItem.remark" label="Vos remarques" multi-line :counter="150"></v-text-field>
@@ -125,6 +125,8 @@ export default {
   data () {
     return {
       dialog: false,
+      valid: true,
+      menu: false,
       search: '',
       driver_last_name_rules: [
         v => !!v || 'Name is required',
@@ -168,7 +170,7 @@ export default {
           city: ''
         },
         vehicle_capacity: 1,
-        date: '',
+        date: null,
         driver_arrangements: [],
         remark: ''
       },
@@ -182,7 +184,7 @@ export default {
           city: ''
         },
         vehicle_capacity: 1,
-        date: '',
+        date: null,
         driver_arrangements: [],
         remark: ''
       },

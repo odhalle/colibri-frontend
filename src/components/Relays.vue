@@ -41,7 +41,7 @@
               full-width
               :nudge-right="40"
               min-width="290px"
-              :return-value.sync="date"
+              :return-value.sync="editedItem.date"
               >
               <v-text-field
               slot="activator"
@@ -53,7 +53,7 @@
               <v-date-picker v-model="editedItem.date" no-title scrollable>
                 <v-spacer></v-spacer>
                 <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                <v-btn flat color="primary" @click="$refs.menu.save(editedItem.date)">OK</v-btn>
               </v-date-picker>
               </v-menu>
               <v-text-field v-model="editedItem.remark" label="Vos remarques" multi-line :rules="remark_rules" :counter="300"></v-text-field>
@@ -120,6 +120,8 @@ export default {
   data () {
     return {
       dialog: false,
+      valid: true,
+      menu: false,
       search: '',
       headers: [
         { text: 'Nom', align: 'left', value: 'host_last_name' },
@@ -139,7 +141,7 @@ export default {
         host_first_name: '',
         number_of_guests: 1,
         guests_first_names: [],
-        date: '',
+        date: null,
         remark: ''
       },
       defaultItem: {
@@ -148,7 +150,7 @@ export default {
         host_first_name: '',
         number_of_guests: 1,
         guests_first_names: [],
-        date: '',
+        date: null,
         remark: ''
       },
       host_email_rules: [],
