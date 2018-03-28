@@ -51,7 +51,6 @@
                 submit
               </v-btn>
               <v-btn @click="clear">clear</v-btn>
-              
             </v-form>
           </v-card-text>
         </v-card>

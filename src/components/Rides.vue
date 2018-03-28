@@ -8,77 +8,112 @@
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
           <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field
-                  label="Nom"
-                  v-model="editedItem.host_last_name"
-                  :rules="host_last_name_rules"
-                  :counter="40"
-                  required
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field
-                  label="Prénom"
-                  v-model="editedItem.host_first_name"
-                  :rules="host_first_name_rules"
-                  :counter="20"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field
-                  label="Email"
-                  v-model="editedItem.host_email"
-                  :rules="host_email_rules"
-                  required
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="Nombres d'invités" v-model="editedItem.number_of_guests"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="Remark" multi-line v-model="editedItem.remark"></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
+            <v-text-field label="Email" prepend-icon="mail" v-model="editedItem.driver_email" :rules="driver_email_rules" required></v-text-field>
+            <v-text-field label="Nom" v-model="editedItem.driver_last_name" :rules="driver_last_name_rules" :counter="40" required></v-text-field>
+            <v-text-field label="Prénom" v-model="editedItem.driver_first_name" :rules="driver_first_name_rules" :counter="20" required></v-text-field>
+            <v-text-field label="Numéro de téléphone" prepend-icon="phone" v-model="editedItem.driver_phone_number" :rules="driver_phone_number_rules" required></v-text-field>
+            <v-text-field label="Code postal" v-model="editedItem.driver_address.zip_code" :rules="driver_address_zip_code_rules" required></v-text-field>
+            <v-text-field label="Ville" v-model="editedItem.driver_address.city" :rules="driver_address_city_rules" required></v-text-field>
+            <v-select label="Capacité" v-model="editedItem.vehicle_capacity" :items="capacity_items" :rules="[v => !!v || 'Capacity is required']" required></v-select>
+            <v-select
+            label="Arrangements"
+            chips
+            tags
+            prepend-icon=""
+            append-icon=""
+            v-model="editedItem.driver_arrangements"
+            >
+              <template slot="selection" slot-scope="data">
+                <v-chip
+                close
+                @input="remove(data.item)"
+                :selected="data.selected"
+                >
+                  {{ data.item }}
+                </v-chip>
+              </template>
+            </v-select>
+            <v-menu
+            ref="menu"
+            lazy
+            :close-on-content-click="false"
+            v-model="menu"
+            transition="scale-transition"
+            offset-y
+            full-width
+            :nudge-right="40"
+            min-width="290px"
+            :return-value.sync="date"
+            >
+              <v-text-field
+              slot="activator"
+              label="Picker in menu"
+              v-model="editedItem.date"
+              prepend-icon="event"
+              readonly
+              ></v-text-field>
+              <v-date-picker v-model="editedItem.date" no-title scrollable>
+                <v-spacer></v-spacer>
+                  <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                  <v-btn flat color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+              </v-date-picker>
+            </v-menu>
+            <v-text-field v-model="editedItem.remark" label="Vos remarques" multi-line :counter="150"></v-text-field>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click.native="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="saveItem" :disabled="!valid">Save</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
     </v-dialog>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      hide-actions
-      class="elevation-1"
-    >
-      <template slot="items" slot-scope="props">
-        <td>{{ props.item.driver_last_name }}</td>
-        <td>{{ props.item.driver_first_name }}</td>
-        <td>{{ props.item.driver_email }}</td>
-        <td>{{ props.item.driver_phone_number }}</td>
-        <td>{{ props.item.driver_address.zip_code }}</td>
-        <td>{{ props.item.driver_address.city }}</td>
-        <td>{{ props.item.vehicle_capacity }}</td>
-        <td>{{ props.item.date }}</td>
-        <td>{{ props.item.driver_arrangements }}</td>
-        <td>{{ props.item.remark }}</td>
-        <td class="justify-center layout px-0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="grey">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteItem(props.item)">
-            <v-icon color="grey">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-    </v-data-table>
+    <v-card>
+      <v-card-title>
+        <span class="display-1">
+          Chauffeurs
+        </span>
+        <v-spacer></v-spacer>
+        <v-text-field
+          append-icon="search"
+          label="Rechercher"
+          single-line
+          hide-details
+          v-model="search"
+        ></v-text-field>
+      </v-card-title>
+      <v-data-table
+        :headers="headers"
+        :items="items"
+        :search="search"
+        hide-actions
+        class="elevation-1"
+      >
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.driver_last_name }}</td>
+          <td>{{ props.item.driver_first_name }}</td>
+          <td>{{ props.item.driver_email }}</td>
+          <td>{{ props.item.driver_phone_number }}</td>
+          <td>{{ props.item.driver_address.zip_code }}</td>
+          <td>{{ props.item.driver_address.city }}</td>
+          <td>{{ props.item.vehicle_capacity }}</td>
+          <td>{{ props.item.date | formatDate }}</td>
+          <td>{{ props.item.driver_arrangements | formatStringArray }}</td>
+          <td>{{ props.item.remark }}</td>
+          <td class="justify-center layout px-0">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="grey">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click="deleteItem(props.item)">
+              <v-icon color="grey">delete</v-icon>
+            </v-btn>
+          </td>
+        </template>
+        <v-alert slot="no-results" :value="true" color="error" icon="warning">
+          Your search for "{{ search }}" found no results.
+        </v-alert>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
 
@@ -86,31 +121,35 @@
 import axios from 'axios'
 
 export default {
+  name: 'Rides',
   data () {
     return {
       dialog: false,
-      valid: true,
-      host_last_name_rules: [
+      search: '',
+      driver_last_name_rules: [
         v => !!v || 'Name is required',
         v => (v && v.length <= 40) || 'Name must be less than 40 characters'
       ],
-      host_first_name_rules: [
+      driver_first_name_rules: [
         v => !!v || 'First name is required',
         v => (v && v.length <= 20) || 'First name must be less than 20 characters'
       ],
-      host_email_rules: [
+      driver_email_rules: [
         v => !!v || 'E-mail is required',
         v =>
           /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
           'E-mail must be valid'
       ],
+      driver_phone_number_rules: [],
+      driver_address_zip_code_rules: [],
+      driver_address_city_rules: [],
       headers: [
         { text: 'Nom', align: 'left', sortable: true, value: 'driver_last_name' },
         { text: 'Prénom', value: 'driver_first_name' },
         { text: 'Email', value: 'driver_email' },
         { text: 'Numéro de téléphone', value: 'driver_phone_number' },
-        { text: 'Ville', value: 'driver_address.zip_code' },
-        { text: 'Code postal', value: 'driver_address.city' },
+        { text: 'Code postal', value: 'driver_address.zip_code' },
+        { text: 'Ville', value: 'driver_address.city' },
         { text: 'Capacité', value: 'vehicle_capacity' },
         { text: 'Date', value: 'date' },
         { text: 'Arrangements', value: 'driver_arrangements' },
@@ -129,7 +168,7 @@ export default {
           city: ''
         },
         vehicle_capacity: 1,
-        date: Date.now(),
+        date: '',
         driver_arrangements: [],
         remark: ''
       },
@@ -143,10 +182,32 @@ export default {
           city: ''
         },
         vehicle_capacity: 1,
-        date: Date.now(),
+        date: '',
         driver_arrangements: [],
         remark: ''
-      }
+      },
+      capacity_items: [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
     }
   },
   mounted () {
@@ -156,7 +217,7 @@ export default {
   },
   computed: {
     formTitle () {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+      return this.editedIndex === -1 ? 'New Ride' : 'Edit Ride'
     }
   },
   watch: {
@@ -192,33 +253,61 @@ export default {
         this.editedIndex = -1
       }, 300)
     },
-    save () {
+    saveItem () {
+      var _this = this
       if (this.editedIndex > -1) {
         if (this.$refs.form.validate()) {
-          // Native form submission is not yet supported
-          axios.post('http://localhost:8080/rides/', {
-            driver_last_name: this.editItem.driver_last_name,
-            driver_first_name: this.editItem.driver_first_name,
-            driver_email: this.editItem.driver_email,
-            driver_phone_number: this.editItem.driver_phone_number,
+          // Edit existing item
+          axios.put('http://localhost:8080/rides/' + this.editedItem._id, {
+            driver_last_name: this.editedItem.driver_last_name,
+            driver_first_name: this.editedItem.driver_first_name,
+            driver_email: this.editedItem.driver_email,
+            driver_phone_number: this.editedItem.driver_phone_number,
             driver_address: {
-              zip_code: this.editItem.driver_address.zip_code,
-              city: this.editItem.driver_address.city
+              zip_code: this.editedItem.driver_address.zip_code,
+              city: this.editedItem.driver_address.city
             },
-            vehicle_capacity: this.editItem.vehicle_capacity,
-            date: this.editItem.date,
-            // TODO
-            driver_arrangements: [],
-            remark: this.editItem.remark
+            vehicle_capacity: this.editedItem.vehicle_capacity,
+            date: this.editedItem.date,
+            driver_arrangements: this.editedItem.driver_arrangements,
+            remark: this.editedItem.remark
           })
-          Object.assign(this.items[this.editedIndex], this.editedItem)
+          .then(function (response) {
+            console.log(response)
+            Object.assign(_this.items[_this.editedIndex], _this.editedItem)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
         }
       } else {
-        this.items.push(this.editedItem)
+        // Insert a new item
+        if (this.$refs.form.validate()) {
+          axios.post('http://localhost:8080/rides/', {
+            driver_last_name: this.editedItem.driver_last_name,
+            driver_first_name: this.editedItem.driver_first_name,
+            driver_email: this.editedItem.driver_email,
+            driver_phone_number: this.editedItem.driver_phone_number,
+            driver_address: {
+              zip_code: this.editedItem.driver_address.zip_code,
+              city: this.editedItem.driver_address.city
+            },
+            vehicle_capacity: this.editedItem.vehicle_capacity,
+            date: this.editedItem.date,
+            driver_arrangements: this.editedItem.driver_arrangements,
+            remark: this.editedItem.remark
+          })
+          .then(function (response) {
+            console.log(response)
+            _this.items.push(_this.editedItem)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+        }
       }
       this.close()
     }
-  },
-  name: 'Rides'
+  }
 }
 </script>
