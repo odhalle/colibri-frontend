@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import './filter'
 import {
   Vuetify,
   VApp,
@@ -20,6 +21,7 @@ import {
   VDialog,
   VMenu,
   VBtn,
+  VSpeedDial,
   VIcon,
   VGrid,
   VToolbar,
@@ -45,6 +47,7 @@ Vue.use(Vuetify, {
     VDialog,
     VMenu,
     VBtn,
+    VSpeedDial,
     VIcon,
     VGrid,
     VToolbar,
