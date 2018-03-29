@@ -142,7 +142,7 @@ export default {
     submit () {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
-        axios.post('http://localhost:8080/rides/', {
+        axios.post('http://localhost:8080/api/rides/', {
           driver_email: this.driver_email,
           driver_last_name: this.driver_last_name,
           driver_first_name: this.driver_first_name,

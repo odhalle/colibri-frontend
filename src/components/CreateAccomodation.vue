@@ -163,7 +163,7 @@ export default {
     submit () {
       if (this.$refs.form.validate()) {
         // Native form submission is not yet supported
-        axios.post('http://localhost:8080/accomodations/', {
+        axios.post('http://localhost:8080/api/accomodations/', {
           host_last_name: this.host_last_name,
           host_first_name: this.host_first_name,
           host_email: this.host_email,
