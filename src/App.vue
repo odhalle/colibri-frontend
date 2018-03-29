@@ -1,5 +1,5 @@
 <template>
-  <v-app light>
+  <v-app>
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
@@ -11,10 +11,10 @@
     >
       <v-list>
         <v-list-tile
-          value="true"
+          :value="item.active"
           v-for="(item, i) in items"
           :key="i"
-          :to=item.link          
+          :to=item.link
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
