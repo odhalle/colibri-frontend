@@ -213,7 +213,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8080/api/rides/').then(response => {
+    axios.get(process.env.API_BASE_URL + '/api/rides/').then(response => {
       this.items = response.data
     })
   },
@@ -237,7 +237,7 @@ export default {
       var _this = this
       if (confirm('Are you sure you want to delete this ride?')) {
         axios
-          .delete('http://localhost:8080/api/rides/' + item._id)
+          .delete(process.env.API_BASE_URL + '/api/rides/' + item._id)
           .then(function (response) {
             console.log(response)
             const index = _this.items.indexOf(item)
@@ -260,7 +260,7 @@ export default {
       if (this.editedIndex > -1) {
         if (this.$refs.form.validate()) {
           // Edit existing item
-          axios.put('http://localhost:8080/api/rides/' + this.editedItem._id, {
+          axios.put(process.env.API_BASE_URL + '/api/rides/' + this.editedItem._id, {
             driver_last_name: this.editedItem.driver_last_name,
             driver_first_name: this.editedItem.driver_first_name,
             driver_email: this.editedItem.driver_email,
@@ -285,7 +285,7 @@ export default {
       } else {
         // Insert a new item
         if (this.$refs.form.validate()) {
-          axios.post('http://localhost:8080/api/rides/', {
+          axios.post(process.env.API_BASE_URL + '/api/rides/', {
             driver_last_name: this.editedItem.driver_last_name,
             driver_first_name: this.editedItem.driver_first_name,
             driver_email: this.editedItem.driver_email,

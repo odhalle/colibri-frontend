@@ -259,7 +259,7 @@ export default {
     }
   },
   mounted () {
-    axios.get('http://localhost:8080/api/accomodations/').then(response => {
+    axios.get(process.env.API_BASE_URL + '/api/accomodations/').then(response => {
       this.items = response.data
     })
   },
@@ -283,7 +283,7 @@ export default {
       var _this = this
       if (confirm('Are you sure you want to delete this ride?')) {
         axios
-          .delete('http://localhost:8080/api/accomodations/' + item._id)
+          .delete(process.env.API_BASE_URL + '/api/accomodations/' + item._id)
           .then(function (response) {
             console.log(response)
             const index = _this.items.indexOf(item)
@@ -306,7 +306,7 @@ export default {
       if (this.editedIndex > -1) {
         if (this.$refs.form.validate()) {
           // Edit existing item
-          axios.put('http://localhost:8080/api/accomodations/' + this.editedItem._id, {
+          axios.put(process.env.API_BASE_URL + '/api/accomodations/' + this.editedItem._id, {
             host_last_name: this.editedItem.host_last_name,
             host_first_name: this.editedItem.host_first_name,
             host_email: this.editedItem.host_email,
@@ -337,7 +337,7 @@ export default {
       } else {
         // Insert a new item
         if (this.$refs.form.validate()) {
-          axios.post('http://localhost:8080/api/accomodations/', {
+          axios.post(process.env.API_BASE_URL + '/api/accomodations/', {
             host_last_name: this.editedItem.host_last_name,
             host_first_name: this.editedItem.host_first_name,
             host_email: this.editedItem.host_email,

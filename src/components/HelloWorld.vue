@@ -18,6 +18,20 @@ Et le colibri lui répondit : &#8220;Je le sais, mais je fais ma part.&#8221;
   </v-container>
 </template>
 
+<script>
+export default {
+  name: 'HelloWorld',
+  data () {
+    return {
+    }
+  },
+  mounted () {
+    console.log(process.env.NODE_ENV)
+    console.log(process.env.API_BASE_URL)
+  }
+}
+</script>
+
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1,
